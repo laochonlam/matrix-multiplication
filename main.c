@@ -1,9 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <getopt.h>
+#include "impl.c"
 
-int main(){
+int main(int argc, char **argv){
+
     int rowA, colA, rowB, colB;
+
     scanf("%d %d", &rowA, &colA);
     // read Matrix A
     int *matA = (int *) malloc(sizeof(int) * rowA * colA);
@@ -16,4 +21,13 @@ int main(){
     for (int i = 0; i < rowB; i++)
         for (int j = 0; j < colB; j++)
             scanf("%d", (matB + i * colB + j));
+
+#ifdef NATIVE_PARALLEL
+    native_parallel_multiple(matA, matB);
+#endif
+
+#ifdef STRASSENS_PARALLEL
+    strassens_parallel_multiple(matA, matB);
+#endif
+
 }
