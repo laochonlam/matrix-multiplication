@@ -36,10 +36,11 @@ int main(int argc, char **argv){
         for (int j = 0; j < colB; j++)
             scanf("%d", (matB + i * colB + j));
 
+    int* result;
     struct timespec start, end;
     clock_gettime(CLOCK_REALTIME, &start);
 #ifdef NATIVE_PARALLEL
-    native_parallel_multiple(matA, matB);
+    result = native_parallel_multiple(matA, matB, rowA, colA, colB);
 #endif
 
 #ifdef STRASSENS_PARALLEL
@@ -47,6 +48,16 @@ int main(int argc, char **argv){
 #endif
     clock_gettime(CLOCK_REALTIME, &end);
 
+    for (int i = 0; i < rowA; i++) {
+        for (int j = 0; j < colB; j++) {
+            printf("%d", *(result + i * colB + j));
+            if (j == colB - 1) {
+                if (i != rowA - 1)
+                    printf("\n");
+            } else
+                printf(" ");
+        }
+    }
     long int cpu_time = diff_in_us(start, end);
-    printf("Execution Time: %ld us\n", cpu_time);
+    printf("\nExecution Time: %ld us\n", cpu_time);
 }
