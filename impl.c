@@ -5,9 +5,11 @@
 int* native_parallel_multiple(int* matA, int* matB, int rowA, int colA, int colB)
 {   
     int *matC = (int *) malloc(sizeof(int) * rowA * colB);
+    #pragma omp parallel for num_threads(4) 
     for(int i=0; i<rowA; ++i) {
         for(int j=0; j<colA; ++j) {
             int sum = 0;
+
             for(int k=0; k<colB; ++k)
                 sum += *A(i, k)*(*B(k, j));
             *C(i, j) = sum;
@@ -15,6 +17,7 @@ int* native_parallel_multiple(int* matA, int* matB, int rowA, int colA, int colB
     }
     return matC;
 }
+
 void strassens_parallel_multiple(int* matA, int* matB)
 {
 }
