@@ -4,7 +4,7 @@ CFLAGS =
 SRCS_common = main.c
 
 native_parallel_multiplication: $(SRCS_common)
-	$(CC) $(CFLAGS) -DNATIVE_PARALLEL -o $@ $(SRCS_common)
+	$(CC) $(CFLAGS) -fopenmp -DNATIVE_PARALLEL -o $@ $(SRCS_common)
 
 strassens_parallel_multiplication: $(SRCS_common)
 	$(CC) $(CFLAGS) -DSTRASSENS_PARALLEL -o $@ $(SRCS_common)
