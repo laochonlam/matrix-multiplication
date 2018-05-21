@@ -22,8 +22,20 @@ int main(int argc, char **argv){
         for (int j = 0; j < colB; j++)
             scanf("%d", (matB + i * colB + j));
 
+    
 #ifdef NATIVE_PARALLEL
-    native_parallel_multiple(matA, matB);
+    int* result = native_parallel_multiple(matA, matB, rowA, colA, colB);
+    for (int i = 0; i < rowA; i++){
+        for (int j = 0; j < colB; j++){
+            printf("%d",*(result + i * colB + j));
+            if(j==colB-1){
+                if(i!=rowA-1)printf("\n");
+            }
+            else printf(" ");
+        }
+    }
+        
+
 #endif
 
 #ifdef STRASSENS_PARALLEL
