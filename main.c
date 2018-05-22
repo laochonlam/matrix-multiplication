@@ -1,9 +1,11 @@
+#include <omp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <getopt.h>
 #include <sys/time.h>
+#include <time.h> 
 #include "impl.c"
 
 static long diff_in_us(struct timespec t1, struct timespec t2)
@@ -44,7 +46,7 @@ int main(int argc, char **argv){
 #endif
 
 #ifdef STRASSENS_PARALLEL
-    strassens_parallel_multiple(matA, matB);
+    result = strassens_parallel_multiple(matA, matB, rowA, colA, colB);
 #endif
     clock_gettime(CLOCK_REALTIME, &end);
 
