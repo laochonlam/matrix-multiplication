@@ -203,17 +203,10 @@ int* native_parallel_multiple(int* matA, int* matB, int rowA, int colA, int colB
     return matC;
 }
 
-int* strassens_parallel_multiple(int* matA, int* matB, int rowA, int colA, int colB)
+int* strassens_parallel_multiple(int* matA, int* matB, int aligned_max)
 {
-    int ttwo=0x8000;
-    while(1){
-        ttwo /=2;
-        if(ttwo<rowA)  break;
-    }   
-    ttwo = ttwo*2;
-
-    int *matC = (int *) malloc(sizeof(int) * rowA * colB);
-    Strassen_Matrix(matA, matB, matC, ttwo);
+    int* matC = (int*)malloc(sizeof(int) * aligned_max * aligned_max);
+    Strassen_Matrix(matA, matB, matC, aligned_max);
     free_2Darray(matA);
     free_2Darray(matB);
     return matC;

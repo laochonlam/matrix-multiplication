@@ -6,7 +6,9 @@
 #include <getopt.h>
 #include <sys/time.h>
 #include <time.h> 
+#include <math.h>
 #include "impl.c"
+#define max(a, b) (((a) > (b)) ? (a) : (b))
 
 static long diff_in_us(struct timespec t1, struct timespec t2)
 {
@@ -40,7 +42,7 @@ int main(int argc, char **argv){
     memset(matA, 0, sizeof(matA));
     for (int i = 0; i < rowA; i++)
         for (int j = 0; j < colA; j++)
-            scanf("%d", (matA + i * aligned_rowA + j));
+            scanf("%d", (matA + i * aligned_colA + j));
 
     //read Matrix B
     scanf("%d %d", &rowB, &colB);
@@ -66,9 +68,21 @@ int main(int argc, char **argv){
 #endif
 
 #ifdef STRASSENS_PARALLEL
-    result = strassens_parallel_multiple(matA, matB, aligned_rowA, aligned_colA, aligned_colB);
+    int aligened_max = max(max(max(aligned_rowA, aligned_colA), aligned_rowB), aligned_colB);
+    int* matA_aligned = (int*)malloc(sizeof(int) * aligened_max * aligened_max);
+    memset(matA_aligned, 0, sizeof(matA_aligned));
+    int* matB_aligned = (int*)malloc(sizeof(int) * aligened_max * aligened_max);
+    memset(matB_aligned, 0, sizeof(matB_aligned));
+    for (int i = 0; i < rowA; i++)
+        for (int j = 0; j < colA; j++) 
+            *(matA_aligned + i * aligened_max + j) = *(matA + i * aligned_colA + j);
+    for (int i = 0; i < rowB; i++)
+        for (int j = 0; j < colB; j++) 
+            *(matB_aligned + i * aligened_max + j) = *(matB + i * aligned_colB + j);
+
+    result = strassens_parallel_multiple(matA_aligned, matB_aligned, aligened_max);
 #endif
- 
+
 #ifdef TRAN_NATIVE_PARALLEL
     result = transpose_native_parallel_multiple(matA, matB, aligned_rowA, aligned_colA, aligned_colB);
 #endif 
