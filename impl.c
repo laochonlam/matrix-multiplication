@@ -3,9 +3,10 @@
 // #define C(i,j) *(matC + i * colB + j)
 #define M(i,j,mat,col)  *((mat) + (i) * (col) + (j))
 
-
-#include <string.h>
+// for AVX
+#include <immintrin.h>
 #include <stdlib.h>
+#include <string.h>
 
 void check(int *A, int n){
     for (int i = 0; i < n; i++) {
@@ -215,5 +216,83 @@ int* strassens_parallel_multiple(int* matA, int* matB, int rowA, int colA, int c
     Strassen_Matrix(matA, matB, matC, ttwo);
     free_2Darray(matA);
     free_2Darray(matB);
+    return matC;
+}
+
+int* transpose_native_parallel_multiple(int* matA, int* matB, int rowA, int colA, int colB)
+{
+    __m256i I0, I1, I3, I4, I5, I6, I7, T1, T2, T0, T3, T4, T5, T6, T7, I2;
+
+    int* matD = (int*)malloc(sizeof(int) * colA * colB);
+    for (int x = 0; x < rowA; x += 8) {
+        for (int y = 0; y < colB; y += 8) {
+    #define PFDISTHUGE 16
+            _mm_prefetch(matB + (y + PFDISTHUGE + 0) * rowA + x, _MM_HINT_T0);
+            _mm_prefetch(matB + (y + PFDISTHUGE + 1) * rowA + x, _MM_HINT_T0);
+            _mm_prefetch(matB + (y + PFDISTHUGE + 2) * rowA + x, _MM_HINT_T0);
+            _mm_prefetch(matB + (y + PFDISTHUGE + 3) * rowA + x, _MM_HINT_T0);
+            _mm_prefetch(matB + (y + PFDISTHUGE + 4) * rowA + x, _MM_HINT_T0);
+            _mm_prefetch(matB + (y + PFDISTHUGE + 5) * rowA + x, _MM_HINT_T0);
+            _mm_prefetch(matB + (y + PFDISTHUGE + 6) * rowA + x, _MM_HINT_T0);
+            _mm_prefetch(matB + (y + PFDISTHUGE + 7) * rowA + x, _MM_HINT_T0);
+
+            I0 = _mm256_loadu_si256((__m256i*)(matB + (y + 0) * rowA + x));
+            I1 = _mm256_loadu_si256((__m256i*)(matB + (y + 1) * rowA + x));
+            I2 = _mm256_loadu_si256((__m256i*)(matB + (y + 2) * rowA + x));
+            I3 = _mm256_loadu_si256((__m256i*)(matB + (y + 3) * rowA + x));
+            I4 = _mm256_loadu_si256((__m256i*)(matB + (y + 4) * rowA + x));
+            I5 = _mm256_loadu_si256((__m256i*)(matB + (y + 5) * rowA + x));
+            I6 = _mm256_loadu_si256((__m256i*)(matB + (y + 6) * rowA + x));
+            I7 = _mm256_loadu_si256((__m256i*)(matB + (y + 7) * rowA + x));
+
+            T0 = _mm256_unpacklo_epi32(I0, I1);
+            T1 = _mm256_unpackhi_epi32(I0, I1);
+            T2 = _mm256_unpacklo_epi32(I2, I3);
+            T3 = _mm256_unpackhi_epi32(I2, I3);
+            T4 = _mm256_unpacklo_epi32(I4, I5);
+            T5 = _mm256_unpackhi_epi32(I4, I5);
+            T6 = _mm256_unpacklo_epi32(I6, I7);
+            T7 = _mm256_unpackhi_epi32(I6, I7);
+
+            I0 = _mm256_unpacklo_epi64(T0, T2);
+            I1 = _mm256_unpackhi_epi64(T0, T2);
+            I2 = _mm256_unpacklo_epi64(T1, T3);
+            I3 = _mm256_unpackhi_epi64(T1, T3);
+            I4 = _mm256_unpacklo_epi64(T4, T6);
+            I5 = _mm256_unpackhi_epi64(T4, T6);
+            I6 = _mm256_unpacklo_epi64(T5, T7);
+            I7 = _mm256_unpackhi_epi64(T5, T7);
+
+            T0 = _mm256_permute2x128_si256(I0, I4, 0x20);
+            T1 = _mm256_permute2x128_si256(I1, I5, 0x20);
+            T2 = _mm256_permute2x128_si256(I2, I6, 0x20);
+            T3 = _mm256_permute2x128_si256(I3, I7, 0x20);
+            T4 = _mm256_permute2x128_si256(I0, I4, 0x31);
+            T5 = _mm256_permute2x128_si256(I1, I5, 0x31);
+            T6 = _mm256_permute2x128_si256(I2, I6, 0x31);
+            T7 = _mm256_permute2x128_si256(I3, I7, 0x31);
+
+            _mm256_storeu_si256((__m256i*)(matD + ((x + 0) * colB) + y), T0);
+            _mm256_storeu_si256((__m256i*)(matD + ((x + 1) * colB) + y), T1);
+            _mm256_storeu_si256((__m256i*)(matD + ((x + 2) * colB) + y), T2);
+            _mm256_storeu_si256((__m256i*)(matD + ((x + 3) * colB) + y), T3);
+            _mm256_storeu_si256((__m256i*)(matD + ((x + 4) * colB) + y), T4);
+            _mm256_storeu_si256((__m256i*)(matD + ((x + 5) * colB) + y), T5);
+            _mm256_storeu_si256((__m256i*)(matD + ((x + 6) * colB) + y), T6);
+            _mm256_storeu_si256((__m256i*)(matD + ((x + 7) * colB) + y), T7);
+        }
+    }
+
+    int* matC = (int*)malloc(sizeof(int) * rowA * colB);
+#pragma omp parallel for num_threads(4)
+    for (int i = 0; i < rowA; ++i) {
+        for (int j = 0; j < colA; ++j) {
+            int sum = 0;
+            for (int k = 0; k < colB; ++k) {
+                sum += M(i, k, matA, colA) * M(j, k, matD, colB);
+            }
+            M(i, j, matC, colB) = sum;
+        }
+    }
     return matC;
 }

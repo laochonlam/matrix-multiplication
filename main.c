@@ -19,47 +19,74 @@ static long diff_in_us(struct timespec t1, struct timespec t2)
         diff.tv_nsec = t2.tv_nsec - t1.tv_nsec;
     }
     return (diff.tv_sec * 1000000.0 + diff.tv_nsec / 1000.0);
-}
+} 
 
 int main(int argc, char **argv){
 
     int rowA, colA, rowB, colB;
+    int aligned_rowA, aligned_colA, aligned_rowB, aligned_colB;
     char prog_name[128];
     scanf("%d %d", &rowA, &colA);
+    //align by 8
+    aligned_rowA = rowA;
+    aligned_colA = colA;
+    if (rowA % 8 != 0)
+        aligned_rowA = rowA + (8 - (rowA % 8));
+    if (colA % 8 != 0)
+        aligned_colA = colA + (8 - (colA % 8));
+
     // read Matrix A
-    int *matA = (int *) malloc(sizeof(int) * rowA * colA);
+    int* matA = (int*)malloc(sizeof(int) * aligned_rowA * aligned_colA);
+    memset(matA, 0, sizeof(matA));
     for (int i = 0; i < rowA; i++)
         for (int j = 0; j < colA; j++)
-            scanf("%d", (matA + i * colA + j));
+            scanf("%d", (matA + i * aligned_rowA + j));
+
     //read Matrix B
     scanf("%d %d", &rowB, &colB);
-    int *matB = (int *) malloc(sizeof(int) * rowB * colB);
+    //align by 8
+    aligned_rowB = rowB;
+    aligned_colB = colB;
+    if (rowB % 8 != 0)
+        aligned_rowB = rowB + (8 - (rowB % 8));
+    if (colB % 8 != 0)
+        aligned_colB = colB + (8 - (colB % 8));
+    int* matB = (int*)malloc(sizeof(int) * aligned_rowB * aligned_colB);
+    memset(matB, 0, sizeof(matB));
     for (int i = 0; i < rowB; i++)
         for (int j = 0; j < colB; j++)
-            scanf("%d", (matB + i * colB + j));
+            scanf("%d", (matB + i * aligned_colB + j));
 
     int* result;
     struct timespec start, end;
+    // printf("%d %d %d", aligned_rowA, aligned_colA, aligned_colB);
     clock_gettime(CLOCK_REALTIME, &start);
 #ifdef NATIVE_PARALLEL
-    result = native_parallel_multiple(matA, matB, rowA, colA, colB);
+    result = native_parallel_multiple(matA, matB, aligned_rowA, aligned_colA, aligned_colB);
 #endif
 
 #ifdef STRASSENS_PARALLEL
-    result = strassens_parallel_multiple(matA, matB, rowA, colA, colB);
+    result = strassens_parallel_multiple(matA, matB, aligned_rowA, aligned_colA, aligned_colB);
 #endif
+ 
+#ifdef TRAN_NATIVE_PARALLEL
+    result = transpose_native_parallel_multiple(matA, matB, aligned_rowA, aligned_colA, aligned_colB);
+#endif 
+
     clock_gettime(CLOCK_REALTIME, &end);
 
+    FILE *fp = fopen("output", "w"); 
     for (int i = 0; i < rowA; i++) {
         for (int j = 0; j < colB; j++) {
-            printf("%d", *(result + i * colB + j));
+            fprintf(fp, "%d", *(result + i * aligned_colB + j));
             if (j == colB - 1) {
                 if (i != rowA - 1)
-                    printf("\n");
+                    fprintf(fp, "\n");
             } else
-                printf(" ");
+                fprintf(fp, " ");
         }
-    }
+    } 
+    fclose(fp);
     long int cpu_time = diff_in_us(start, end);
     printf("\nExecution Time: %ld us\n", cpu_time);
-}
+} 

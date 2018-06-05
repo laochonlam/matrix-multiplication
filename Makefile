@@ -1,13 +1,21 @@
-EXEC = native_parallel_multiplication strassens_parallel_multiplication
-CC ?= gcc 
-CFLAGS = 
-SRCS_common = main.c
+UNAME := $(shell uname)
+ifeq ($(UNAME), Darwin)
+CC = gcc-8
+endif
+
+EXEC = native_parallel_multiplication strassens_parallel_multiplication transpose_native_parallel_multiplication
+CC ?= gcc
+CFLAGS = -mavx2
+SRCS_common = main.c 
 
 native_parallel_multiplication: $(SRCS_common)
 	$(CC) $(CFLAGS) -fopenmp -DNATIVE_PARALLEL -o $@ $(SRCS_common)
 
 strassens_parallel_multiplication: $(SRCS_common)
 	$(CC) $(CFLAGS) -DSTRASSENS_PARALLEL -o $@ $(SRCS_common)
+
+transpose_native_parallel_multiplication: $(SRCS_common)
+	$(CC) $(CFLAGS) -fopenmp -DTRAN_NATIVE_PARALLEL -o $@ $(SRCS_common)
 
 all: $(EXEC)
 
