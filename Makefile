@@ -22,9 +22,8 @@ transpose_native_parallel_multiplication: $(SRCS_common)
 transpose_strassens_parallel_multiplication: $(SRCS_common)
 	$(CC) $(CFLAGS) -fopenmp -DSTRASSENS_PARALLEL -DSTRASSENS_TRANSPOSE -o $@ $(SRCS_common)	
 
-
 clean:	
-	@rm $(EXEC)
+	@rm $(EXEC) *.output
 
 check:
 	@./$(EXEC) <  test_data/input > test_data/output
