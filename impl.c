@@ -50,12 +50,14 @@ void Strassen_Matrix(int *A, int *B, int *C, int n) {
         return;
     }
 
-#ifdef STRASSENS_TRANSPOSE
     if(n<=8) {
         int *D = native_parallel_multiple(A, B, n, n, n);
         memcpy(C, D, n*n*sizeof(int)); 
         return;
     }
+    
+#ifdef STRASSENS_TRANSPOSE
+
 
     if(n<=64) {
         int *D = transpose_native_parallel_multiple(A, B, n, n, n);
