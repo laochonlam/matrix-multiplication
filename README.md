@@ -46,9 +46,14 @@ To execute the matrix multiplication,
 $ matrix_multiplication < <input_data>
 ```
 then the multiplication result ```<matrix_multiplication>.output``` and the execution time will be generated.
+
+## Input data format
+
+There are some examples in folder ```test_data```.
+
+
 ## Benchmarking
 To do the benchmarks, 
 ```
 $ sh run.sh
 ```
-
