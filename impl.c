@@ -110,7 +110,6 @@ void Strassen_Matrix(int *A, int *B, int *C, int n) {
     // divide to small matrix
     int i, j;
 
-#pragma omp parallel for
     for(i=0; i<m; ++i) {
         for(j=0; j<m; ++j){
             M(i,j,a11,m) = M(i + 0, j + 0, A,n);
@@ -188,7 +187,6 @@ void Strassen_Matrix(int *A, int *B, int *C, int n) {
         add_matrix(temp2, p6, c22, m);
     }
 
-#pragma omp parallel for
     for(i=0; i<m; ++i)
         for(j=0; j<m; ++j) {
             M(i+0,j+0,C,n) = M(i,j,c11,m);

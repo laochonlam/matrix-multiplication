@@ -24,6 +24,7 @@ diff strassens_parallel_multiplication.output transpose_strassens_parallel_multi
 echo diff transpose_strassens_parallel_multiplication.output native_parallel_multiplication.output
 diff transpose_strassens_parallel_multiplication.output native_parallel_multiplication.output
 
+echo 
 echo ${PURPLE}[test2]${NORMAL}
 echo ${ORANGE}native_parallel_multiplication${NORMAL}
 ./native_parallel_multiplication < test_data/test2
@@ -43,6 +44,7 @@ diff strassens_parallel_multiplication.output transpose_strassens_parallel_multi
 echo diff transpose_strassens_parallel_multiplication.output native_parallel_multiplication.output
 diff transpose_strassens_parallel_multiplication.output native_parallel_multiplication.output
 
+echo 
 echo ${PURPLE}[test3]${NORMAL}
 echo ${ORANGE}native_parallel_multiplication${NORMAL}
 ./native_parallel_multiplication < test_data/test3
