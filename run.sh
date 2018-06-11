@@ -12,17 +12,17 @@ echo ${CYAN}transpose_native_parallel_multiplication${NORMAL}
 ./transpose_native_parallel_multiplication < test_data/test1
 echo ${RED}strassens_parallel_multiplication${NORMAL}
 ./strassens_parallel_multiplication < test_data/test1
-echo ${BLUE}ffffffffffffffffff${NORMAL}
-./ffffffffffffffffff < test_data/test1
+echo ${BLUE}transpose_strassens_parallel_multiplication${NORMAL}
+./transpose_strassens_parallel_multiplication < test_data/test1
 
 echo diff native_parallel_multiplication.output transpose_native_parallel_multiplication.output
 diff native_parallel_multiplication.output transpose_native_parallel_multiplication.output
 echo diff transpose_native_parallel_multiplication.output strassens_parallel_multiplication.output
 diff transpose_native_parallel_multiplication.output strassens_parallel_multiplication.output
-echo diff strassens_parallel_multiplication.output ffffffffffffffffff.output
-diff strassens_parallel_multiplication.output ffffffffffffffffff.output
-echo diff ffffffffffffffffff.output native_parallel_multiplication.output
-diff ffffffffffffffffff.output native_parallel_multiplication.output
+echo diff strassens_parallel_multiplication.output transpose_strassens_parallel_multiplication.output
+diff strassens_parallel_multiplication.output transpose_strassens_parallel_multiplication.output
+echo diff transpose_strassens_parallel_multiplication.output native_parallel_multiplication.output
+diff transpose_strassens_parallel_multiplication.output native_parallel_multiplication.output
 
 echo ${PURPLE}[test2]${NORMAL}
 echo ${ORANGE}native_parallel_multiplication${NORMAL}
@@ -31,17 +31,17 @@ echo ${CYAN}transpose_native_parallel_multiplication${NORMAL}
 ./transpose_native_parallel_multiplication < test_data/test2
 echo ${RED}strassens_parallel_multiplication${NORMAL}
 ./strassens_parallel_multiplication < test_data/test2
-echo ${BLUE}ffffffffffffffffff${NORMAL}
-./ffffffffffffffffff < test_data/test2
+echo ${BLUE}transpose_strassens_parallel_multiplication${NORMAL}
+./transpose_strassens_parallel_multiplication < test_data/test2
 
 echo diff native_parallel_multiplication.output transpose_native_parallel_multiplication.output
 diff native_parallel_multiplication.output transpose_native_parallel_multiplication.output
 echo diff transpose_native_parallel_multiplication.output strassens_parallel_multiplication.output
 diff transpose_native_parallel_multiplication.output strassens_parallel_multiplication.output
-echo diff strassens_parallel_multiplication.output ffffffffffffffffff.output
-diff strassens_parallel_multiplication.output ffffffffffffffffff.output
-echo diff ffffffffffffffffff.output native_parallel_multiplication.output
-diff ffffffffffffffffff.output native_parallel_multiplication.output
+echo diff strassens_parallel_multiplication.output transpose_strassens_parallel_multiplication.output
+diff strassens_parallel_multiplication.output transpose_strassens_parallel_multiplication.output
+echo diff transpose_strassens_parallel_multiplication.output native_parallel_multiplication.output
+diff transpose_strassens_parallel_multiplication.output native_parallel_multiplication.output
 
 echo ${PURPLE}[test3]${NORMAL}
 echo ${ORANGE}native_parallel_multiplication${NORMAL}
@@ -50,14 +50,14 @@ echo ${CYAN}transpose_native_parallel_multiplication${NORMAL}
 ./transpose_native_parallel_multiplication < test_data/test3
 echo ${RED}strassens_parallel_multiplication${NORMAL}
 ./strassens_parallel_multiplication < test_data/test3
-echo ${BLUE}ffffffffffffffffff${NORMAL}
-./ffffffffffffffffff < test_data/test3
+echo ${BLUE}transpose_strassens_parallel_multiplication${NORMAL}
+./transpose_strassens_parallel_multiplication < test_data/test3
 
 echo diff native_parallel_multiplication.output transpose_native_parallel_multiplication.output
 diff native_parallel_multiplication.output transpose_native_parallel_multiplication.output
 echo diff transpose_native_parallel_multiplication.output strassens_parallel_multiplication.output
 diff transpose_native_parallel_multiplication.output strassens_parallel_multiplication.output
-echo diff strassens_parallel_multiplication.output ffffffffffffffffff.output
-diff strassens_parallel_multiplication.output ffffffffffffffffff.output
-echo diff ffffffffffffffffff.output native_parallel_multiplication.output
-diff ffffffffffffffffff.output native_parallel_multiplication.output
+echo diff strassens_parallel_multiplication.output transpose_strassens_parallel_multiplication.output
+diff strassens_parallel_multiplication.output transpose_strassens_parallel_multiplication.output
+echo diff transpose_strassens_parallel_multiplication.output native_parallel_multiplication.output
+diff transpose_strassens_parallel_multiplication.output native_parallel_multiplication.output
