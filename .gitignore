@@ -4,5 +4,6 @@ main
 native_parallel_multiplication
 strassens_parallel_multiplication
 transpose_native_parallel_multiplication
+transpose_strassens_parallel_multiplication
 .vscode
 *.output
