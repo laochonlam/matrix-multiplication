@@ -190,7 +190,7 @@ void Strassen_Matrix(int *A, int *B, int *C, int n) {
 int* native_parallel_multiple(int* matA, int* matB, int rowA, int colA, int colB)
 {   
     int *matC = (int *) malloc(sizeof(int) * rowA * colB);
-    #pragma omp parallel for num_threads(4) 
+    #pragma omp parallel for  
     for(int i=0; i<rowA; ++i) {
         for(int j=0; j<colA; ++j) {
             int sum = 0;
@@ -277,7 +277,7 @@ int* transpose_native_parallel_multiple(int* matA, int* matB, int rowA, int colA
     }
 
     int* matC = (int*)malloc(sizeof(int) * rowA * colB);
-#pragma omp parallel for num_threads(4)
+#pragma omp parallel for 
     for (int i = 0; i < rowA; ++i) {
         for (int j = 0; j < colA; ++j) {
             int sum = 0;

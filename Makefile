@@ -12,7 +12,7 @@ native_parallel_multiplication: $(SRCS_common)
 	$(CC) $(CFLAGS) -fopenmp -DNATIVE_PARALLEL -o $@ $(SRCS_common)
 
 strassens_parallel_multiplication: $(SRCS_common)
-	$(CC) $(CFLAGS) -DSTRASSENS_PARALLEL -o $@ $(SRCS_common)
+	$(CC) $(CFLAGS) -fopenmp -DSTRASSENS_PARALLEL -o $@ $(SRCS_common)
 
 transpose_native_parallel_multiplication: $(SRCS_common)
 	$(CC) $(CFLAGS) -fopenmp -DTRAN_NATIVE_PARALLEL -o $@ $(SRCS_common)
