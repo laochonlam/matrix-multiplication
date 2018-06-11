@@ -67,7 +67,7 @@ void Strassen_Matrix(int *A, int *B, int *C, int n) {
     int *b11, *b12, *b21, *b22;
     int *c11, *c12, *c21, *c22;
     int *p1, *p2, *p3, *p4, *p5, *p6, *p7;
-    int *temp1, *temp2;
+    int *temp1, *temp2, *temp3, *temp4, *temp5, *temp6, *temp7, *temp8, *temp9, *temp10;
 
     // just allocate (use {} to hidd)
     {
@@ -96,11 +96,20 @@ void Strassen_Matrix(int *A, int *B, int *C, int n) {
 
         temp1 = malloc_2Darray(m);
         temp2 = malloc_2Darray(m);
+        temp3 = malloc_2Darray(m);
+        temp4 = malloc_2Darray(m);
+        temp5 = malloc_2Darray(m);
+        temp6 = malloc_2Darray(m);
+        temp7 = malloc_2Darray(m);
+        temp8 = malloc_2Darray(m);
+        temp9 = malloc_2Darray(m);
+        temp10 = malloc_2Darray(m);
     }
 
     // divide to small matrix
     int i, j;
 
+#pragma omp parallel for
     for(i=0; i<m; ++i) {
         for(j=0; j<m; ++j){
             M(i,j,a11,m) = M(i + 0, j + 0, A,n);
@@ -115,32 +124,52 @@ void Strassen_Matrix(int *A, int *B, int *C, int n) {
         }
     }
 
-    // calculate p1 ~ p7 
+    // calculate p1 ~ p7
+    #pragma omp parallel sections
     {
-        // #pragma omp section {}
+#pragma omp section
+        {
         add_matrix(a11, a22, temp1, m);
         add_matrix(b11, b22, temp2, m);
         Strassen_Matrix(temp1, temp2, p1, m);
-        
-        add_matrix(a21, a22, temp1, m);
-        Strassen_Matrix(temp1, b11, p2, m);
-        
-        sub_matrix(b12, b22, temp2, m),
-        Strassen_Matrix(a11, temp2, p3, m);
-        
-        sub_matrix(b21, b11, temp2, m),
-        Strassen_Matrix(a22, temp2, p4, m);
-        
-        add_matrix(a11, a12, temp1, m),
-        Strassen_Matrix(temp1, b22, p5, m);
-        
-        sub_matrix(a21, a11, temp1, m);
-        add_matrix(b11, b12, temp2, m);
-        Strassen_Matrix(temp1, temp2, p6, m);
-        
-        sub_matrix(a12, a22, temp1, m);
-        add_matrix(b21, b22, temp2, m);
-        Strassen_Matrix(temp1, temp2, p7, m);
+        }
+
+#pragma omp section
+        {
+        add_matrix(a21, a22, temp3, m);
+        Strassen_Matrix(temp3, b11, p2, m);
+        }
+
+#pragma omp section
+        {
+        sub_matrix(b12, b22, temp4, m),
+        Strassen_Matrix(a11, temp4, p3, m);
+        }
+
+#pragma omp section
+        {
+        sub_matrix(b21, b11, temp5, m),
+        Strassen_Matrix(a22, temp5, p4, m);
+        }
+
+#pragma omp section
+        {
+        add_matrix(a11, a12, temp6, m),
+        Strassen_Matrix(temp6, b22, p5, m);
+        }
+
+#pragma omp section
+        {
+        sub_matrix(a21, a11, temp7, m);
+        add_matrix(b11, b12, temp8, m);
+        Strassen_Matrix(temp7, temp8, p6, m);
+        }
+#pragma omp section
+        {
+        sub_matrix(a12, a22, temp9, m);
+        add_matrix(b21, b22, temp10, m);
+        Strassen_Matrix(temp9, temp10, p7, m);
+        }
     }
 
     // calculate c11, c12, c21, c22
@@ -158,6 +187,7 @@ void Strassen_Matrix(int *A, int *B, int *C, int n) {
         add_matrix(temp2, p6, c22, m);
     }
 
+#pragma omp parallel for
     for(i=0; i<m; ++i)
         for(j=0; j<m; ++j) {
             M(i+0,j+0,C,n) = M(i,j,c11,m);
@@ -193,6 +223,14 @@ void Strassen_Matrix(int *A, int *B, int *C, int n) {
 
         free_2Darray(temp1);
         free_2Darray(temp2);
+        free_2Darray(temp3);
+        free_2Darray(temp4);
+        free_2Darray(temp5);
+        free_2Darray(temp6);
+        free_2Darray(temp7);
+        free_2Darray(temp8);
+        free_2Darray(temp9);
+        free_2Darray(temp10);
     }
 }
 
