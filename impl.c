@@ -8,6 +8,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+int *transpose_native_parallel_multiple(int *matA, int *matB, int rowA, int colA, int colB);
+int *native_parallel_multiple(int *matA, int *matB, int rowA, int colA, int colB);
+
 void check(int *A, int n){
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -44,6 +47,18 @@ void Strassen_Matrix(int *A, int *B, int *C, int n) {
 
     if(n==1) {
         *C = *A * (*B);
+        return;
+    }
+
+    if(n<=8) {
+        int *D = native_parallel_multiple(A, B, n, n, n);
+        memcpy(C, D, n*n*sizeof(int)); 
+        return;
+    }
+
+    if(n<=64) {
+        int *D = transpose_native_parallel_multiple(A, B, n, n, n);
+        memcpy(C, D, n * n * sizeof(int));
         return;
     }
 
@@ -99,12 +114,6 @@ void Strassen_Matrix(int *A, int *B, int *C, int n) {
             M(i,j,b22,m) = M(i + m, j + m, B,n);
         }
     }
-    // printf("a11\n");
-    // check(a11, m);
-    // printf("a12\n");
-    // check(a12, m);
-    // check(a21, m);
-    // check(a22, m);
 
     // calculate p1 ~ p7 
     {
