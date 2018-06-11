@@ -88,8 +88,8 @@ int main(int argc, char **argv){
 #endif 
 
     clock_gettime(CLOCK_REALTIME, &end);
-
-    FILE *fp = fopen("output", "w"); 
+    char* output = strcat(argv[0]+2, ".output");
+    FILE *fp = fopen(output, "w"); 
     for (int i = 0; i < rowA; i++) {
         for (int j = 0; j < colB; j++) {
             fprintf(fp, "%d", *(result + i * aligned_colB + j));
@@ -102,5 +102,5 @@ int main(int argc, char **argv){
     } 
     fclose(fp);
     long int cpu_time = diff_in_us(start, end);
-    printf("\nExecution Time: %ld us\n", cpu_time);
+    printf("Execution Time: %ld us\n\n", cpu_time);
 } 

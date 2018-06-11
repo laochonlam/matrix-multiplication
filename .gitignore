@@ -1,8 +1,8 @@
-test.c
+test*
 output
 main
-test
 native_parallel_multiplication
 strassens_parallel_multiplication
 transpose_native_parallel_multiplication
 .vscode
+*.output
