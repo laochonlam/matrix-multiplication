@@ -57,3 +57,15 @@ To do the benchmarks,
 ```
 $ sh run.sh
 ```
+
+### 10 * 10
+![](benchmarking/test1.png)
+### 1024 * 1024
+![](benchmarking/test2.png)
+### 4096 * 4096
+![](benchmarking/test3.png)
+
+## Author
+* **Lao Chon Lam** - [laochanlam](https://github.com/PurpleBooth)
+* **etc276** - [etc276](https://github.com/etc276)
+* **Cayon Liow** - [cayonliow](https://github.com/Cayonliow)
